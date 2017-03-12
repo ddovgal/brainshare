@@ -1,4 +1,4 @@
-package ua.ddovgal
+package ua.ddovgal.brainshareApi
 
 import org.junit.Test
 import org.junit.runner.RunWith

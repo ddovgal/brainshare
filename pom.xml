@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>ua.ddovgal</groupId>
@@ -22,7 +22,10 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
-		<kotlin.version>1.0.6</kotlin.version>
+		<kotlin.version>1.1.0</kotlin.version>
+		<!-- Custom properties -->
+		<bluemix.email>${env.BMIX_EMAIL}</bluemix.email>
+		<bluemix.password>${env.BMIX_PASSWORD}</bluemix.password>
 	</properties>
 
 	<dependencies>
@@ -44,8 +47,19 @@
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-websocket</artifactId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-jooq</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+
 		<dependency>
 			<groupId>org.jetbrains.kotlin</groupId>
 			<artifactId>kotlin-stdlib</artifactId>
@@ -63,9 +77,9 @@
 			<scope>runtime</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
+			<groupId>org.jooq</groupId>
+			<artifactId>jooq-codegen</artifactId>
+			<version>3.9.1</version>
 		</dependency>
 	</dependencies>
 
@@ -89,7 +103,7 @@
 				<executions>
 					<execution>
 						<id>compile</id>
-						<phase>compile</phase>
+						<phase>process-sources</phase>
 						<goals>
 							<goal>compile</goal>
 						</goals>
@@ -109,6 +123,80 @@
 						<version>${kotlin.version}</version>
 					</dependency>
 				</dependencies>
+			</plugin>
+
+			<!-- Custom plugins -->
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>properties-maven-plugin</artifactId>
+				<version>1.0.0</version>
+				<executions>
+					<execution>
+						<phase>initialize</phase>
+						<goals>
+							<goal>read-project-properties</goal>
+						</goals>
+						<configuration>
+							<files>
+								<file>src/main/resources/application.properties</file>
+							</files>
+							<quiet>true</quiet>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.jooq</groupId>
+				<artifactId>jooq-codegen-maven</artifactId>
+				<version>3.9.1</version>
+				<executions>
+					<execution>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+					</execution>
+				</executions>
+				<dependencies>
+					<dependency>
+						<groupId>mysql</groupId>
+						<artifactId>mysql-connector-java</artifactId>
+						<version>5.1.41</version>
+					</dependency>
+				</dependencies>
+				<configuration>
+					<jdbc>
+						<!--will be generated in runtime by properties-maven-plugin-->
+						<!--suppress MavenModelInspection -->
+						<driver>${spring.datasource.driver-class-name}</driver>
+						<!--suppress MavenModelInspection -->
+						<url>${spring.datasource.url}</url>
+						<!--suppress MavenModelInspection -->
+						<user>${spring.datasource.username}</user>
+						<!--suppress MavenModelInspection -->
+						<password>${spring.datasource.password}</password>
+					</jdbc>
+					<generator>
+						<strategy>
+							<name>ua.ddovgal.brainshareApi.JooqImprovedPrefixGeneratorStrategy</name>
+						</strategy>
+						<database>
+							<!--will be generated in runtime by properties-maven-plugin-->
+							<!--suppress MavenModelInspection -->
+							<inputSchema>${db.schema.name}</inputSchema>
+						</database>
+						<target>
+							<packageName>ua.ddovgal.brainshareApi.jooq</packageName>
+							<directory>src/main/kotlin</directory>
+						</target>
+						<generate>
+							<pojos>true</pojos>
+							<!--<daos>true</daos>-->
+						</generate>
+					</generator>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
