@@ -115,6 +115,22 @@
 							<goal>test-compile</goal>
 						</goals>
 					</execution>
+					<!--need this for compiling JooqImprovedPrefixGeneratorStrategy-->
+					<execution>
+						<id>compile-generator-strategy</id>
+						<!--suppress KotlinMavenPluginPhase -->
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>compile</goal>
+						</goals>
+						<configuration>
+							<sourceDirs>
+								<sourceDir>
+									${project.build.sourceDirectory}/ua/ddovgal/brainshareApi/JooqImprovedPrefixGeneratorStrategy.kt
+								</sourceDir>
+							</sourceDirs>
+						</configuration>
+					</execution>
 				</executions>
 				<dependencies>
 					<dependency>
@@ -189,7 +205,7 @@
 						</database>
 						<target>
 							<packageName>ua.ddovgal.brainshareApi.jooq</packageName>
-							<directory>src/main/kotlin</directory>
+							<directory>target/generated-sources/jooq</directory>
 						</target>
 						<generate>
 							<pojos>true</pojos>
