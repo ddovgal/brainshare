@@ -22,10 +22,11 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
-		<kotlin.version>1.1.0</kotlin.version>
+		<kotlin.version>1.1.1</kotlin.version>
 		<!-- Custom properties -->
 		<bluemix.email>${env.BMIX_EMAIL}</bluemix.email>
 		<bluemix.password>${env.BMIX_PASSWORD}</bluemix.password>
+		<propertiesFileName>application</propertiesFileName>
 	</properties>
 
 	<dependencies>
@@ -79,7 +80,6 @@
 		<dependency>
 			<groupId>org.jooq</groupId>
 			<artifactId>jooq-codegen</artifactId>
-			<version>3.9.1</version>
 		</dependency>
 	</dependencies>
 
@@ -149,13 +149,14 @@
 				<version>1.0.0</version>
 				<executions>
 					<execution>
+						<id>read-properties</id>
 						<phase>initialize</phase>
 						<goals>
 							<goal>read-project-properties</goal>
 						</goals>
 						<configuration>
 							<files>
-								<file>src/main/resources/application.properties</file>
+								<file>src/main/resources/${propertiesFileName}.properties</file>
 							</files>
 							<quiet>true</quiet>
 						</configuration>
@@ -164,9 +165,52 @@
 			</plugin>
 
 			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>sql-maven-plugin</artifactId>
+				<version>1.5</version>
+				<configuration>
+					<!--suppress MavenModelInspection -->
+					<skip>${maven.test.skip}</skip>
+				</configuration>
+				<executions>
+					<execution>
+						<id>create-database-mysql</id>
+						<!--<phase>initialize</phase>-->
+						<goals>
+							<goal>execute</goal>
+						</goals>
+						<configuration>
+							<!--must be generated in runtime by properties-maven-plugin-->
+							<!--suppress MavenModelInspection -->
+							<driver>${spring.datasource.driver-class-name}</driver>
+							<!--suppress MavenModelInspection -->
+							<url>${db.url}?useSSL=false</url>
+							<!--suppress MavenModelInspection -->
+							<username>${spring.datasource.username}</username>
+							<!--suppress MavenModelInspection -->
+							<password>${spring.datasource.password}</password>
+							<autocommit>true</autocommit>
+							<srcFiles>
+								<srcFile>src/main/resources/schema-mysql.sql</srcFile>
+								<srcFile>src/main/resources/routines-mysql.sql</srcFile>
+								<srcFile>src/main/resources/data-mysql.sql</srcFile>
+							</srcFiles>
+							<delimiter>;;</delimiter>
+						</configuration>
+					</execution>
+				</executions>
+				<dependencies>
+					<dependency>
+						<groupId>mysql</groupId>
+						<artifactId>mysql-connector-java</artifactId>
+						<version>${mysql.version}</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+
+			<plugin>
 				<groupId>org.jooq</groupId>
 				<artifactId>jooq-codegen-maven</artifactId>
-				<version>3.9.1</version>
 				<executions>
 					<execution>
 						<phase>generate-sources</phase>
@@ -179,7 +223,7 @@
 					<dependency>
 						<groupId>mysql</groupId>
 						<artifactId>mysql-connector-java</artifactId>
-						<version>5.1.41</version>
+						<version>${mysql.version}</version>
 					</dependency>
 				</dependencies>
 				<configuration>
@@ -188,7 +232,7 @@
 						<!--suppress MavenModelInspection -->
 						<driver>${spring.datasource.driver-class-name}</driver>
 						<!--suppress MavenModelInspection -->
-						<url>${spring.datasource.url}</url>
+						<url>${db.url}?useSSL=false</url>
 						<!--suppress MavenModelInspection -->
 						<user>${spring.datasource.username}</user>
 						<!--suppress MavenModelInspection -->
