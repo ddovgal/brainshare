@@ -3,22 +3,18 @@ package ua.ddovgal.brainshareApi.steps
 import org.jooq.DSLContext
 import org.jooq.types.UInteger
 import org.junit.After
-import org.junit.Assert
 import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.dao.DataAccessException
-import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit4.SpringRunner
-import ua.ddovgal.brainshareApi.jooq.tables.TUserStatus.USER_STATUS
+import ua.ddovgal.brainshareApi.jooq.tables.UserStatus.USER_STATUS
 import ua.ddovgal.brainshareApi.jooq.tables.pojos.UserStatus
 
-@Suppress("SpringKotlinAutowiredMembers")
 @RunWith(SpringRunner::class)
-@SpringBootTest
-@ActiveProfiles("default")
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 class JooqBasicTest {
 
     @Autowired lateinit var jooq: DSLContext
@@ -65,7 +61,7 @@ class JooqBasicTest {
                         .set(USER_STATUS.DESCRIPTION, "test1")
                         .set(USER_STATUS.LOW_BORDER, 1212 + 1)
                         .execute()
-                Assert.fail("Jooq saved 2 records with same ID. But must not. There must be a DataAccessException")
+                fail("Jooq saved 2 records with same ID. But must not. There must be a DataAccessException")
             }
         } catch(e: DataAccessException) {
             rollback = true

@@ -30,10 +30,10 @@
 	</properties>
 
 	<dependencies>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-actuator</artifactId>
-		</dependency>
+		<!--<dependency>-->
+		<!--<groupId>org.springframework.boot</groupId>-->
+		<!--<artifactId>spring-boot-starter-actuator</artifactId>-->
+		<!--</dependency>-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-mail</artifactId>
@@ -55,11 +55,11 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-jooq</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-devtools</artifactId>
-			<scope>runtime</scope>
-		</dependency>
+		<!--<dependency>-->
+		<!--<groupId>org.springframework.boot</groupId>-->
+		<!--<artifactId>spring-boot-devtools</artifactId>-->
+		<!--<scope>runtime</scope>-->
+		<!--</dependency>-->
 
 		<dependency>
 			<groupId>org.jetbrains.kotlin</groupId>
@@ -76,10 +76,6 @@
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 			<scope>runtime</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.jooq</groupId>
-			<artifactId>jooq-codegen</artifactId>
 		</dependency>
 	</dependencies>
 
@@ -115,22 +111,6 @@
 							<goal>test-compile</goal>
 						</goals>
 					</execution>
-					<!--need this for compiling JooqImprovedPrefixGeneratorStrategy-->
-					<execution>
-						<id>compile-generator-strategy</id>
-						<!--suppress KotlinMavenPluginPhase -->
-						<phase>generate-sources</phase>
-						<goals>
-							<goal>compile</goal>
-						</goals>
-						<configuration>
-							<sourceDirs>
-								<sourceDir>
-									${project.build.sourceDirectory}/ua/ddovgal/brainshareApi/JooqImprovedPrefixGeneratorStrategy.kt
-								</sourceDir>
-							</sourceDirs>
-						</configuration>
-					</execution>
 				</executions>
 				<dependencies>
 					<dependency>
@@ -158,7 +138,6 @@
 							<files>
 								<file>src/main/resources/${propertiesFileName}.properties</file>
 							</files>
-							<quiet>true</quiet>
 						</configuration>
 					</execution>
 				</executions>
@@ -175,7 +154,7 @@
 				<executions>
 					<execution>
 						<id>create-database-mysql</id>
-						<!--<phase>initialize</phase>-->
+						<phase>initialize</phase>
 						<goals>
 							<goal>execute</goal>
 						</goals>
@@ -192,10 +171,8 @@
 							<autocommit>true</autocommit>
 							<srcFiles>
 								<srcFile>src/main/resources/schema-mysql.sql</srcFile>
-								<srcFile>src/main/resources/routines-mysql.sql</srcFile>
-								<srcFile>src/main/resources/data-mysql.sql</srcFile>
 							</srcFiles>
-							<delimiter>;;</delimiter>
+							<delimiterType>row</delimiterType>
 						</configuration>
 					</execution>
 				</executions>
@@ -239,9 +216,6 @@
 						<password>${spring.datasource.password}</password>
 					</jdbc>
 					<generator>
-						<strategy>
-							<name>ua.ddovgal.brainshareApi.JooqImprovedPrefixGeneratorStrategy</name>
-						</strategy>
 						<database>
 							<!--will be generated in runtime by properties-maven-plugin-->
 							<!--suppress MavenModelInspection -->
