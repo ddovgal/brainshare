@@ -30,7 +30,7 @@ class JooqBasicTest {
 
     @Test fun test_inserting_and_deleting() {
         val inUserStatusRows = jooq.fetchCount(USER_STATUS)
-        val newRecord = jooq.newRecord(USER_STATUS, UserStatus(UInteger.valueOf(TESTED_USER_STATUS_ID), "test", "test", 1212))
+        val newRecord = jooq.newRecord(USER_STATUS, UserStatus(UInteger.valueOf(TESTED_USER_STATUS_ID), "test", "test", 1212.0))
         newRecord.store()
         assertEquals("Jooq didn't insert into USER_STATUS table", inUserStatusRows + 1, jooq.fetchCount(USER_STATUS))
         newRecord.delete()
@@ -38,9 +38,9 @@ class JooqBasicTest {
     }
 
     @Test(expected = DataAccessException::class) fun test_DataAccessException_throwing() {
-        var newRecord = jooq.newRecord(USER_STATUS, UserStatus(UInteger.valueOf(TESTED_USER_STATUS_ID), "test", "test", 1212))
+        var newRecord = jooq.newRecord(USER_STATUS, UserStatus(UInteger.valueOf(TESTED_USER_STATUS_ID), "test", "test", 1212.0))
         newRecord.store()
-        newRecord = jooq.newRecord(USER_STATUS, UserStatus(UInteger.valueOf(TESTED_USER_STATUS_ID), "test1", "test1", 1212 + 1))
+        newRecord = jooq.newRecord(USER_STATUS, UserStatus(UInteger.valueOf(TESTED_USER_STATUS_ID), "test1", "test1", 1212 + 1.0))
         newRecord.store()
     }
 
@@ -53,13 +53,13 @@ class JooqBasicTest {
                         .set(USER_STATUS.ID, UInteger.valueOf(TESTED_USER_STATUS_ID))
                         .set(USER_STATUS.STATUS_NAME, "test")
                         .set(USER_STATUS.DESCRIPTION, "test")
-                        .set(USER_STATUS.LOW_BORDER, 1212)
+                        .set(USER_STATUS.LOW_BORDER, 1212.0)
                         .execute()
                 jooq.insertInto(USER_STATUS)
                         .set(USER_STATUS.ID, UInteger.valueOf(TESTED_USER_STATUS_ID))
                         .set(USER_STATUS.STATUS_NAME, "test1")
                         .set(USER_STATUS.DESCRIPTION, "test1")
-                        .set(USER_STATUS.LOW_BORDER, 1212 + 1)
+                        .set(USER_STATUS.LOW_BORDER, 1212 + 1.0)
                         .execute()
                 fail("Jooq saved 2 records with same ID. But must not. There must be a DataAccessException")
             }

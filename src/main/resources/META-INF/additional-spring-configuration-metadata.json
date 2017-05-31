@@ -1,0 +1,54 @@
+{
+  "properties": [
+    {
+      "name": "db.url",
+      "type": "java.lang.String",
+      "description": "Description for db.url."
+    },
+    {
+      "name": "db.schema.name",
+      "type": "java.lang.String",
+      "description": "Description for db.schema.name."
+    },
+    {
+      "name": "mail.smtp.starttls.enable",
+      "type": "java.lang.String",
+      "description": "Description for mail.smtp.starttls.enable."
+    },
+    {
+      "name": "email.from-address",
+      "type": "java.lang.String",
+      "description": "Description for email.from-address."
+    },
+    {
+      "name": "bluemix.email",
+      "type": "java.lang.String",
+      "description": "Description for bluemix.email."
+    },
+    {
+      "name": "bluemix.password",
+      "type": "java.lang.String",
+      "description": "Description for bluemix.password."
+    },
+    {
+      "name": "security.jwt.secret",
+      "type": "java.lang.String",
+      "description": "Description for security.jwt.secret."
+    },
+    {
+      "name": "security.jwt.expiration-minutes",
+      "type": "java.lang.String",
+      "description": "Description for security.jwt.expiration-minutes."
+    },
+    {
+      "name": "web.rootURL",
+      "type": "java.lang.String",
+      "description": "Description for web.rootURL."
+    },
+    {
+      "name": "web.protocol",
+      "type": "java.lang.String",
+      "description": "Description for web.protocol."
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+dist: trusty
+sudo: required
+language: java
+jdk: oraclejdk8
+
+services:
+  - mysql
+
+before_install:
+  - chmod +x ./travis_mysql_5.7.sh
+  - ./travis_mysql_5.7.sh
+  - chmod +x ./mvnw
+
+notifications:
+  webhooks: https://fathomless-fjord-24024.herokuapp.com/notify
