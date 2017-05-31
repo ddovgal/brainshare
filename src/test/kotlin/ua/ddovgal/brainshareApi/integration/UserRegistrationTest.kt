@@ -1,6 +1,5 @@
 package ua.ddovgal.brainshareApi.integration
 
-import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.argumentCaptor
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
@@ -54,7 +53,6 @@ class UserRegistrationTest {
 
     @Before
     fun setup() {
-        whenever(mailSender.send(any<MimeMessage>())).then { }
         whenever(mailSender.createMimeMessage()).thenCallRealMethod()
     }
 
